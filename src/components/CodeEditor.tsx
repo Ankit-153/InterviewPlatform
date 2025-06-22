@@ -1,5 +1,6 @@
-import { CODING_QUESTIONS, LANGUAGES } from "@/constants";
-import { useState } from "react";
+// import { CODING_QUESTIONS, LANGUAGES } from "@/constants";
+import {LANGUAGES } from "@/constants";
+import { useEffect, useState } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./ui/resizable";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -9,24 +10,63 @@ import Editor from "@monaco-editor/react";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { useCodeRunner } from "@/hooks/useCodeRunner";
+import { useQuestions } from "@/hooks/useQuestions";
+import LoaderUI from "./LoaderUI";
+
+// Import or define the Question type
+// Update the import path below to the actual location of your Question type, for example:
+import type { Question } from "@/hooks/useQuestions.ts"; // Adjust the path as needed
+
 
 
 function CodeEditor() {
-  const [selectedQuestion, setSelectedQuestion] = useState(CODING_QUESTIONS[0]);
-  const [language, setLanguage] = useState<"javascript" | "python" | "java" | "cpp">(LANGUAGES[0].id);
-  const [code, setCode] = useState(selectedQuestion.starterCode[language]);
+
+
+
+
+const { questions, loading: loadingQuestions, error: errorQuestions } = useQuestions();
+const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+const [language, setLanguage] = useState<"javascript" | "python" | "java" | "cpp">(LANGUAGES[0].id);
+const [code, setCode] = useState("");
+
+  useEffect(() => {
+  if (questions.length > 0 && !selectedQuestion) {
+    setSelectedQuestion(questions[0]);
+    setCode(questions[0].starterCode[language]);
+  }
+}, [questions, selectedQuestion, language]);
+
+  // const [selectedQuestion, setSelectedQuestion] = useState(CODING_QUESTIONS[0]);
+  // const [language, setLanguage] = useState<"javascript" | "python" | "java" | "cpp">(LANGUAGES[0].id);
+  // const [code, setCode] = useState(selectedQuestion.starterCode[language]);
   const [stdin, setStdin] = useState("");
 
+  // const handleQuestionChange = (questionId: string) => {
+  //   const question = CODING_QUESTIONS.find((q) => q.id === questionId)!;
+  //   setSelectedQuestion(question);
+  //   setCode(question.starterCode[language]);
+  // };
+
   const handleQuestionChange = (questionId: string) => {
-    const question = CODING_QUESTIONS.find((q) => q.id === questionId)!;
+  const question = questions.find((q) => q.id === questionId);
+  if (question) {
     setSelectedQuestion(question);
     setCode(question.starterCode[language]);
-  };
+  }
+};
 
-  const handleLanguageChange = (newLanguage: "javascript" | "python" | "java" | "cpp") => {
-    setLanguage(newLanguage);
+const handleLanguageChange = (newLanguage: "javascript" | "python" | "java" | "cpp") => {
+  setLanguage(newLanguage);
+  if (selectedQuestion) {
     setCode(selectedQuestion.starterCode[newLanguage]);
-  };
+  }
+};
+
+
+  // const handleLanguageChange = (newLanguage: "javascript" | "python" | "java" | "cpp") => {
+  //   setLanguage(newLanguage);
+  //   setCode(selectedQuestion.starterCode[newLanguage]);
+  // };
 
   const { runCode, output, loading, error } = useCodeRunner();
 
@@ -63,6 +103,11 @@ function CodeEditor() {
 //     stdin: "7 8",
 //   });
 // };
+if (!selectedQuestion) {
+  // return <div>Loading question...</div>; // or a spinner
+  return <LoaderUI/>
+}
+
 
 
   return (
@@ -90,7 +135,7 @@ function CodeEditor() {
                       <SelectValue placeholder="Select question" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CODING_QUESTIONS.map((q) => (
+                      {questions.map((q) => (
                         <SelectItem key={q.id} value={q.id}>
                           {q.title}
                         </SelectItem>
