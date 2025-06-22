@@ -9,16 +9,40 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.22.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.1.15",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-scroll-area": "^1.2.9",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.2.5",
+    "@stream-io/node-sdk": "^0.4.24",
+    "@stream-io/video-react-sdk": "^1.18.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "convex": "^1.24.8",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.516.0",
+    "next": "^14.2.25",
+    "next-themes": "^0.4.6",
     "react": "^18",
+    "react-day-picker": "^9.7.0",
     "react-dom": "^18",
-    "next": "14.2.23"
+    "react-hot-toast": "^2.5.2",
+    "react-resizable-panels": "^3.0.3",
+    "svix": "^1.67.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
