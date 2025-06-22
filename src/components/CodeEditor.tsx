@@ -6,11 +6,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { AlertCircleIcon, BookIcon, LightbulbIcon } from "lucide-react";
 import Editor from "@monaco-editor/react";
+import axios from "axios";
+import { Button } from "./ui/button";
+import { useCodeRunner } from "@/hooks/useCodeRunner";
+
 
 function CodeEditor() {
   const [selectedQuestion, setSelectedQuestion] = useState(CODING_QUESTIONS[0]);
-  const [language, setLanguage] = useState<"javascript" | "python" | "java">(LANGUAGES[0].id);
+  const [language, setLanguage] = useState<"javascript" | "python" | "java" | "cpp">(LANGUAGES[0].id);
   const [code, setCode] = useState(selectedQuestion.starterCode[language]);
+  const [stdin, setStdin] = useState("");
 
   const handleQuestionChange = (questionId: string) => {
     const question = CODING_QUESTIONS.find((q) => q.id === questionId)!;
@@ -18,10 +23,47 @@ function CodeEditor() {
     setCode(question.starterCode[language]);
   };
 
-  const handleLanguageChange = (newLanguage: "javascript" | "python" | "java") => {
+  const handleLanguageChange = (newLanguage: "javascript" | "python" | "java" | "cpp") => {
     setLanguage(newLanguage);
     setCode(selectedQuestion.starterCode[newLanguage]);
   };
+
+  const { runCode, output, loading, error } = useCodeRunner();
+
+  const languageIdMap = {
+    python: 71,
+    javascript: 63,
+    java: 62,
+    cpp: 54,
+  };
+
+  const handleRunClick = () => {
+    runCode({
+      language_id: languageIdMap[language],
+      source_code: code,
+      stdin: stdin, // You can allow input from user if needed
+    });
+    // alert(stdin)
+  };
+
+//   const handleRunClick = () => {
+//   runCode({
+//     language_id: languageIdMap["cpp"], // Use C++ for this test
+//     source_code: `
+// #include <iostream>
+// using namespace std;
+
+// int main() {
+//     int a, b;
+//     cin >> a >> b;
+//     cout << (a + b) << endl;
+//     return 0;
+// }
+//     `,
+//     stdin: "7 8",
+//   });
+// };
+
 
   return (
     <ResizablePanelGroup direction="vertical" className="min-h-[calc-100vh-4rem-1px]">
@@ -181,8 +223,39 @@ function CodeEditor() {
               wrappingIndent: "indent",
             }}
           />
+
         </div>
       </ResizablePanel>
+            
+            {/* Stdin Input */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Custom Input (stdin)</label>
+            <textarea
+              value={stdin}
+              onChange={(e) => setStdin(e.target.value)}
+              className="w-full h-24 p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-900 text-sm"
+              placeholder="Enter your input here..."
+              
+            />
+          </div>
+
+
+       {/* run button added */}
+          <div className="">
+            <Button onClick={handleRunClick} disabled={loading}>
+              {loading ? "Running..." : "Run Code"}
+            </Button>
+
+            {output && (
+              <pre className="bg-black text-white p-4 rounded w-full max-h-[200px] overflow-auto">
+                {output.stderr || output.compile_output || output.stdout || "No output."}
+              </pre>
+            )}
+
+            {error && (
+              <p className="text-red-500 mt-2">{error}</p>
+            )}
+          </div>
     </ResizablePanelGroup>
   );
 }
