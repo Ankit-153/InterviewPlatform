@@ -10,7 +10,9 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 
 function MeetingPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
+   const params = useParams() as { id: string }; // 👈 tell TypeScript what to expect
+  const id = params.id
   const { isLoaded } = useUser();
   const { call, isCallLoading } = useGetCallById(id);
 
