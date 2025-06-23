@@ -26,7 +26,7 @@ export const useQuestions = () => {
       try {
         const res = await axios.get(
   process.env.NODE_ENV === "production"
-    ? "https://interview-platform-5v4we3vqj-ankits-projects-9d23e707.vercel.app/api/questions"
+    ? "https://interview-platform-two.vercel.app//api/questions"
     : "/api/questions"
 );
 
