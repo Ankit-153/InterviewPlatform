@@ -2,7 +2,8 @@
 import { useState } from "react";
 import axios from "axios";
 
-const apiKey = "e00a19c8admshf9ed60a0aa89a8dp189c13jsn14bd9e4e36bb";
+// const apiKey = "e00a19c8admshf9ed60a0aa89a8dp189c13jsn14bd9e4e36bb";
+const apiKey = "048f855597mshd67964b12ed4c02p149dfejsn9d9f019f82db";
 
 type RunCodeOptions = {
   language_id: number;
