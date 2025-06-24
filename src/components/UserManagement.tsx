@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel"; // Add Id import
 import { useUser } from "@clerk/nextjs";
 import {
   Card,
@@ -29,10 +29,11 @@ export default function UserManagement() {
   
   if (!users) return <LoaderUI />;
   
-  const handleRoleChange = async (userId: string, newRole: "interviewer" | "candidate") => {
+  // Update the handler with proper typing
+  const handleRoleChange = async (userId: Id<"users">, newRole: "interviewer" | "candidate") => {
     try {
       await updateUserRole({
-        userId,
+        userId, // Now correctly typed as Id<"users">
         role: newRole,
       });
       toast.success("User role updated successfully");
