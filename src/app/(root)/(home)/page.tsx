@@ -9,8 +9,9 @@ import { api } from "../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import MeetingModal from "@/components/MeetingModal";
 import LoaderUI from "@/components/LoaderUI";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, Users } from "lucide-react"; // Add Users icon
 import MeetingCard from "@/components/MeetingCard";
+import { Button } from "@/components/ui/button"; // Import Button component
 
 export default function Home() {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function Home() {
       case "Join Interview":
         setModalType("join");
         setShowModal(true);
+        break;
+      case "User Management":
+        router.push("/users");
         break;
       default:
         router.push(`/${title.toLowerCase()}`);
@@ -61,6 +65,20 @@ export default function Home() {
                 onClick={() => handleQuickAction(action.title)}
               />
             ))}
+          </div>
+
+          {/* Add User Management Button Section */}
+          <div className="mt-8 flex flex-col items-center">
+            <h2 className="text-xl font-semibold mb-4">Admin Controls</h2>
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="flex items-center gap-2 px-6 py-6 text-lg"
+              onClick={() => router.push("/users")}
+            >
+              <Users className="h-5 w-5" />
+              Manage Users
+            </Button>
           </div>
 
           <MeetingModal
