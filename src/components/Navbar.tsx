@@ -15,7 +15,7 @@ function Navbar() {
         >
           <CodeIcon className="size-8 text-emerald-500" />
           <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-            CodeSync
+            IntervuDesk
           </span>
         </Link>
 
