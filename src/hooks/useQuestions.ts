@@ -24,12 +24,7 @@ export const useQuestions = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get(
-  process.env.NODE_ENV === "production"
-    ? "https://interview-platform-two.vercel.app/api/questions"
-    : "/api/questions"
-);
-
+        const res = await axios.get("/api/questions");
         setQuestions(res.data);
       } catch (err: any) {
         setError(err.message || "Failed to fetch questions");
