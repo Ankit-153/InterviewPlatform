@@ -362,12 +362,9 @@ function CodeEditor() {
             {displayOutput.stderr || displayOutput.compile_output || displayOutput.stdout || "No output."}
           </pre>
         )}
-
         {displayError && (
           <p className="text-red-500 mt-2">{displayError}</p>
-        )}
-
-      
+        )}      
       </div>
     </ResizablePanelGroup>
   );
