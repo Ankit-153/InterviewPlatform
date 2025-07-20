@@ -94,13 +94,26 @@ function CodeEditor() {
   }, [questions, language, updateSelectedQuestion, updateCode]);
   
   // Language change handler
-  const handleLanguageChange = useCallback((newLanguage: CodeLanguage) => {
-    if (!selectedQuestion || !updateLanguage) return;
+  // const handleLanguageChange = useCallback((newLanguage: CodeLanguage) => {
+  //   if (!selectedQuestion || !updateLanguage) return;
     
-    if (selectedQuestion.starterCode && selectedQuestion.starterCode[newLanguage]) {
-      updateLanguage(newLanguage);
-    }
-  }, [selectedQuestion, updateLanguage]);
+  //   if (selectedQuestion.starterCode && selectedQuestion.starterCode[newLanguage]) {
+  //     updateLanguage(newLanguage);
+  //   }
+  // }, [selectedQuestion, updateLanguage]);
+// New Handle language change
+  const handleLanguageChange = useCallback((newLanguage: CodeLanguage) => {
+  if (!selectedQuestion || !updateLanguage || !updateCode) return;
+
+  updateLanguage(newLanguage);
+
+  // update the editor with the corresponding starter code
+  const newStarterCode = selectedQuestion.starterCode?.[newLanguage];
+  if (newStarterCode) {
+    updateCode(newStarterCode);
+  }
+}, [selectedQuestion, updateLanguage, updateCode]);
+
   
   // Code runner integration
   const { runCode } = useCodeRunner();
