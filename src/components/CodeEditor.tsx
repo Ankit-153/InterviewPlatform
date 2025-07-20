@@ -363,23 +363,11 @@ function CodeEditor() {
           </pre>
         )}
 
-{/*         {displayError && (
-          <p className="text-red-500 mt-2">{displayError}</p>
-        )} */}
-
         {displayError && (
-  <Card>
-    <CardHeader className="flex flex-row items-center gap-2">
-      <AlertCircleIcon className="h-5 w-5 text-red-500" />
-      <CardTitle>Error</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <p className="text-red-500 text-sm whitespace-pre-wrap">
-        {typeof displayError === "string" ? displayError : JSON.stringify(displayError)}
-      </p>
-    </CardContent>
-  </Card>
-)}
+          <p className="text-red-500 mt-2">{displayError}</p>
+        )}
+
+      
       </div>
     </ResizablePanelGroup>
   );
