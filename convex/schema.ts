@@ -48,7 +48,27 @@ export default defineSchema({
   lastUpdatedBy: v.string(),
   lastUpdated: v.number(),
 })
-.index("by_interview_id", ["interviewId"])
+.index("by_interview_id", ["interviewId"]),
+
+  aiReviews: defineTable({
+    codeSessionId: v.id("codeSessions"),
+    interviewId: v.string(),
+    code: v.string(),
+    language: v.string(),
+    review: v.object({
+      quality: v.string(),
+      codeQualityScore: v.number(),
+      bestPractices: v.array(v.string()),
+      potentialBugs: v.array(v.string()),
+      performanceIssues: v.array(v.string()),
+      suggestions: v.array(v.string()),
+      summary: v.string(),
+    }),
+    reviewedBy: v.string(), // user who requested the review
+    createdAt: v.number(),
+  })
+    .index("by_code_session_id", ["codeSessionId"])
+    .index("by_interview_id", ["interviewId"]),
 });
 
 // https://romantic-escargot-62.clerk.accounts.dev

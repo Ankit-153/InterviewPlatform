@@ -4,12 +4,14 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./ui/resiz
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { AlertCircleIcon, BookIcon, LightbulbIcon } from "lucide-react";
+import { AlertCircleIcon, BookIcon, LightbulbIcon, Sparkles } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { Button } from "./ui/button";
 import { useCodeRunner } from "@/hooks/useCodeRunner";
 import { useQuestions } from "@/hooks/useQuestions";
+import { useAICodeReview, type AIReview } from "@/hooks/useAICodeReview";
 import LoaderUI from "./LoaderUI";
+import AIReviewDisplay from "./AIReviewDisplay";
 import { useSharedCodeEditor } from "@/hooks/useSharedCodeEditor";
 import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -25,6 +27,8 @@ function CodeEditor() {
   const { questions, loading: loadingQuestions } = useQuestions();
   const [executionLoading, setExecutionLoading] = useState(false);
   const [editorRef, setEditorRef] = useState<any>(null);
+  const [aiReview, setAiReview] = useState<AIReview | null>(null);
+  const [showAIReview, setShowAIReview] = useState(false);
   
   // Use shared editor without cursor synchronization
   const {
@@ -47,6 +51,10 @@ function CodeEditor() {
     interviewId,
     "", 
     "javascript"
+  );
+
+  const { generateReview, isLoading: isGeneratingReview } = useAICodeReview(
+    session?._id || ""
   );
 
   // Simplified editor mounting function without cursor tracking
@@ -350,12 +358,30 @@ function CodeEditor() {
 
       {/* Run button - Everyone can run code */}
       <div className="px-4 py-2 space-y-2">
-        <Button 
-          onClick={handleRunClick} 
-          disabled={executionLoading}
-        >
-          {executionLoading ? "Running..." : "Run Code"}
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleRunClick} 
+            disabled={executionLoading}
+          >
+            {executionLoading ? "Running..." : "Run Code"}
+          </Button>
+          
+          <Button 
+            onClick={async () => {
+              const review = await generateReview(code, language, interviewId);
+              if (review) {
+                setAiReview(review);
+                setShowAIReview(true);
+              }
+            }} 
+            disabled={isGeneratingReview || !code.trim()}
+            variant="outline"
+            className="gap-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            {isGeneratingReview ? "Analyzing..." : "Get AI Review"}
+          </Button>
+        </div>
 
         {displayOutput && (
           <pre className="bg-black text-white p-4 rounded w-full max-h-[200px] overflow-auto">
@@ -364,8 +390,32 @@ function CodeEditor() {
         )}
         {displayError && (
           <p className="text-red-500 mt-2">{displayError}</p>
-        )}      
+        )}
       </div>
+
+      {/* AI Review Modal/Expandable Section */}
+      {showAIReview && aiReview && (
+        <div className="px-4 py-2 space-y-2 border-t">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-yellow-500" />
+              AI Code Review
+            </h3>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowAIReview(false)}
+            >
+              Hide
+            </Button>
+          </div>
+          <ScrollArea className="max-h-96">
+            <div className="pr-4">
+              <AIReviewDisplay review={aiReview} />
+            </div>
+          </ScrollArea>
+        </div>
+      )}
     </ResizablePanelGroup>
   );
 }

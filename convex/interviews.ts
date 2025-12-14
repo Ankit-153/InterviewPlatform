@@ -68,3 +68,54 @@ export const updateInterviewStatus = mutation({
     });
   },
 });
+
+// AI Review mutations
+export const saveAIReview = mutation({
+  args: {
+    codeSessionId: v.id("codeSessions"),
+    interviewId: v.string(),
+    code: v.string(),
+    language: v.string(),
+    review: v.object({
+      quality: v.string(),
+      codeQualityScore: v.number(),
+      bestPractices: v.array(v.string()),
+      potentialBugs: v.array(v.string()),
+      performanceIssues: v.array(v.string()),
+      suggestions: v.array(v.string()),
+      summary: v.string(),
+    }),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    return await ctx.db.insert("aiReviews", {
+      ...args,
+      reviewedBy: identity.subject,
+      createdAt: Date.now(),
+    });
+  },
+});
+
+export const getAIReviewByCodeSession = query({
+  args: { codeSessionId: v.id("codeSessions") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("aiReviews")
+      .withIndex("by_code_session_id", (q) => q.eq("codeSessionId", args.codeSessionId))
+      .order("desc")
+      .first();
+  },
+});
+
+export const getAIReviewsByInterview = query({
+  args: { interviewId: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("aiReviews")
+      .withIndex("by_interview_id", (q) => q.eq("interviewId", args.interviewId))
+      .order("desc")
+      .collect();
+  },
+});
