@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Ensure this API route is always dynamic and not pre-rendered
 export const dynamic = "force-dynamic";
@@ -15,16 +15,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GOOGLE_API_KEY) {
       return NextResponse.json(
-        { error: "OpenAI API key not configured" },
+        { error: "Google API key not configured" },
         { status: 500 }
       );
     }
     // Instantiate the client lazily to avoid build-time errors
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
     const prompt = `You are an expert code reviewer. Analyze the following ${language} code and provide a detailed review in JSON format.
 
@@ -46,21 +44,13 @@ Provide your analysis in the following JSON format:
 
 Be specific and constructive in your feedback. If there are no issues in a category, use an empty array.`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const content = response.choices[0]?.message?.content;
+    const result = await model.generateContent(prompt);
+
+    const content = result.response.text();
     if (!content) {
-      throw new Error("No response from OpenAI");
+      throw new Error("No response from Gemini");
     }
 
     // Extract JSON from the response
@@ -76,7 +66,7 @@ Be specific and constructive in your feedback. If there are no issues in a categ
       review,
     });
   } catch (error) {
-    console.error("Error calling OpenAI:", error);
+    console.error("Error calling Gemini:", error);
 
     if (error instanceof Error) {
       return NextResponse.json(
