@@ -47,7 +47,7 @@ Provide your analysis in the following JSON format:
 Be specific and constructive in your feedback. If there are no issues in a category, use an empty array.`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "user",
