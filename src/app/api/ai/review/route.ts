@@ -44,7 +44,7 @@ Provide your analysis in the following JSON format:
 
 Be specific and constructive in your feedback. If there are no issues in a category, use an empty array.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
     const result = await model.generateContent(prompt);
 
