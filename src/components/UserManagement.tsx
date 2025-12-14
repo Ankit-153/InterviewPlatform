@@ -72,14 +72,14 @@ export default function UserManagement() {
                 
                 <div className="flex items-center gap-4">
                   <Badge variant={user.role === "interviewer" ? "default" : "outline"}>
-                    {user.role}
+                    {user.role ?? "unassigned"}
                   </Badge>
                   
                   {/* Don't allow changing your own role */}
                   {user.clerkId !== currentUser?.id && (
                     <Select
-                      defaultValue={user.role}
-                      onValueChange={(value) => 
+                      defaultValue={user.role ?? undefined}
+                      onValueChange={(value) =>
                         handleRoleChange(user._id, value as "interviewer" | "candidate")
                       }
                     >
