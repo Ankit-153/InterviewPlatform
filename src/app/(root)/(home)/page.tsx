@@ -4,7 +4,7 @@ import ActionCard from "@/components/ActionCard";
 import { QUICK_ACTIONS } from "@/constants";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useQuery } from "convex/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import MeetingModal from "@/components/MeetingModal";
@@ -16,10 +16,21 @@ import { Button } from "@/components/ui/button"; // Import Button component
 export default function Home() {
   const router = useRouter();
 
-  const { isInterviewer, isCandidate, isLoading } = useUserRole();
+  const { isInterviewer, isCandidate, isLoading, hasRole } = useUserRole();
   const interviews = useQuery(api.interviews.getMyInterviews);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<"start" | "join">();
+
+  useEffect(() => {
+    if (!isLoading && !hasRole) {
+      router.replace("/select-role");
+    }
+  }, [isLoading, hasRole, router]);
+
+  // Prevent rendering if no role
+  if (isLoading || !hasRole) {
+    return <LoaderUI />;
+  }
 
   const handleQuickAction = (title: string) => {
     switch (title) {
@@ -67,7 +78,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Add User Management Button Section */}
+          {/* Add User Management Button Section
           <div className="mt-8 flex flex-col items-center">
             <h2 className="text-xl font-semibold mb-4">Admin Controls</h2>
             <Button 
@@ -79,7 +90,7 @@ export default function Home() {
               <Users className="h-5 w-5" />
               Manage Users
             </Button>
-          </div>
+          </div> */}
 
           <MeetingModal
             isOpen={showModal}
