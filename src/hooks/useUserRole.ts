@@ -14,7 +14,7 @@ export const useUserRole = () => {
       ? {
           clerkId: user!.id,
         }
-      : undefined
+      : "skip"
   );
 
   const isLoading = !isUserLoaded || userData === undefined;
