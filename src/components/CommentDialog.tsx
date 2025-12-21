@@ -61,8 +61,6 @@ function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
     </div>
   );
 
-  if (existingComments === undefined || users === undefined) return null;
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {/* TRIGGER BUTTON */}
@@ -79,7 +77,7 @@ function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
         </DialogHeader>
 
         <div className="space-y-6">
-          {existingComments.length > 0 && (
+          {existingComments && existingComments.length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">Previous Comments</h4>
@@ -92,7 +90,7 @@ function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
               <ScrollArea className="h-[240px]">
                 <div className="space-y-4">
                   {existingComments.map((comment, index) => {
-                    const interviewer = getInterviewerInfo(users, comment.interviewerId);
+                    const interviewer = getInterviewerInfo(users || [], comment.interviewerId);
                     return (
                       <div key={index} className="rounded-lg border p-4 space-y-3">
                         <div className="flex items-center justify-between">
