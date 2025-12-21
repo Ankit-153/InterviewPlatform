@@ -1,4 +1,6 @@
 
+
+
 # Interview Platform
 
 A comprehensive technical interview platform built with Next.js, enabling real-time video calls, collaborative coding, and AI-powered code reviews.
@@ -26,10 +28,12 @@ A comprehensive technical interview platform built with Next.js, enabling real-t
 -   **Icons**: [Lucide React](https://lucide.dev/)
 
 ### Backend & Services
--   **Database**: [Convex](https://www.convex.dev/) (Real-time database)
+-   **Database**: 
+    - [Convex](https://www.convex.dev/) (Real-time synchronization)
+    - [MongoDB](https://www.mongodb.com/) & [Mongoose](https://mongoosejs.com/) (Data persistence)
 -   **Authentication**: [Clerk](https://clerk.com/)
 -   **Video/Audio**: [Stream](https://getstream.io/)
--   **AI**: [Google Gemini](https://deepmind.google/technologies/gemini/)
+-   **AI**: [Google Gemini](https://deepmind.google/technologies/gemini/) (`@google/genai`)
 -   **Code Editor**: [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 -   **Code Execution**: [Judge0](https://judge0.com/) (via RapidAPI)
 
@@ -44,6 +48,7 @@ You will also need accounts and API keys for:
 -   [Convex](https://www.convex.dev/)
 -   [Stream](https://getstream.io/)
 -   [Google AI Studio](https://aistudio.google.com/) (Gemini API)
+-   [MongoDB Atlas](https://www.mongodb.com/atlas/database) (or a local MongoDB instance)
 -   [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce) (Judge0)
 
 ## ⚡ Getting Started
@@ -51,8 +56,9 @@ You will also need accounts and API keys for:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/interview-platform.git
+git clone [https://github.com/yourusername/interview-platform.git](https://github.com/yourusername/interview-platform.git)
 cd interview-platform
+
 ```
 
 ### 2. Install Dependencies
@@ -61,11 +67,12 @@ cd interview-platform
 npm install
 # or
 yarn install
+
 ```
 
 ### 3. Environment Setup
 
-Create a \`.env.local\` file in the root directory and add the following environment variables:
+Create a `.env.local` file in the root directory and add the following environment variables:
 
 ```env
 # Clerk Authentication
@@ -81,11 +88,15 @@ NEXT_PUBLIC_STREAM_API_KEY=...
 STREAM_SECRET_KEY=...
 
 # Google Gemini AI
-GEMINI_API_KEY=...
+GOOGLE_API_KEY=...
+
+# MongoDB
+MONGODB_URI=mongodb+srv://...
 
 # Judge0 (RapidAPI)
 NEXT_PUBLIC_RAPIDAPI_KEY=...
 NEXT_PUBLIC_RAPIDAPI_HOST=judge0-ce.p.rapidapi.com
+
 ```
 
 ### 4. Setup Convex
@@ -94,6 +105,7 @@ Initialize and configure the Convex database:
 
 ```bash
 npx convex dev
+
 ```
 
 This command will start the Convex development server and sync your schema.
@@ -106,9 +118,10 @@ Start the Next.js development server:
 npm run dev
 # or
 yarn dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) in your browser to see the application.
 
 ## 📂 Project Structure
 
@@ -132,30 +145,33 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 │   └── constants/         # App constants
 ├── public/                # Static assets
 └── ...
+
 ```
 
 ## 🔑 Key Components
 
--   **\`MeetingRoom.tsx\`**: Handles the main video interface and layout.
--   **\`CodeEditor.tsx\`**: Manages the Monaco editor instance and code execution.
--   **\`AIReviewDisplay.tsx\`**: Displays the AI-generated code review feedback.
--   **\`InterviewScheduleUI.tsx\`**: Interface for scheduling new interviews.
+* **`MeetingRoom.tsx`**: Handles the main video interface and layout.
+* **`CodeEditor.tsx`**: Manages the Monaco editor instance and code execution.
+* **`AIReviewDisplay.tsx`**: Displays the AI-generated code review feedback.
+* **`InterviewScheduleUI.tsx`**: Interface for scheduling new interviews.
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-1.  Fork the project
-2.  Create your feature branch (\`git checkout -b feature/AmazingFeature\`)
-3.  Commit your changes (\`git commit -m 'Add some AmazingFeature'\`)
-4.  Push to the branch (\`git push origin feature/AmazingFeature\`)
-5.  Open a Pull Request
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 🙏 Acknowledgments
 
--   [Next.js](https://nextjs.org/) for the amazing framework.
--   [Convex](https://www.convex.dev/) for simplifying backend development.
--   [Clerk](https://clerk.com/) for seamless authentication.
--   [Stream](https://getstream.io/) for robust video calling capabilities.
-"@
-Set-Content -Path "c:\InterviewPlatform\README.md" -Value $content
+* [Next.js](https://nextjs.org/) for the amazing framework.
+* [Convex](https://www.convex.dev/) for simplifying backend development.
+* [Clerk](https://clerk.com/) for seamless authentication.
+* [Stream](https://getstream.io/) for robust video calling capabilities.
+
+```
+
+```
