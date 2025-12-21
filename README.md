@@ -1,10 +1,5 @@
-
-
-
 # Interview Platform
-
 A comprehensive technical interview platform built with Next.js, enabling real-time video calls, collaborative coding, and AI-powered code reviews.
-
 ## 🚀 Features
 
 -   **Real-time Video & Audio Calls**: High-quality video conferencing powered by Stream.
@@ -17,6 +12,90 @@ A comprehensive technical interview platform built with Next.js, enabling real-t
 -   **Secure Authentication**: Robust user authentication and management via Clerk.
 -   **Real-time Database**: Instant data synchronization using Convex.
 -   **Code Execution**: Run code in multiple languages using Judge0.
+# Project Workflow
+
+This document outlines the detailed workflow for the Interview Platform, covering both the **Interviewer** and **Interviewee/Candidate** roles.
+
+## 1. Onboarding & Authentication
+
+**Both Roles:**
+1.  **Sign Up / Login**: Users authenticate using Clerk (Google, GitHub, etc.).
+2.  **Role Selection**:
+    -   Upon first login, users are redirected to the `/select-role` page.
+    -   Users must choose between **"Candidate"** or **"Interviewer"**.
+    -   This role is permanently stored in the database and determines access permissions.
+
+---
+
+## 2. Interviewer Workflow
+
+### A. Dashboard & Home
+-   **Home Page**: Displays quick actions ("New Call", "Join Interview") and a list of upcoming interviews.
+-   **Dashboard**: A dedicated admin view to manage all interviews.
+    -   View interviews grouped by status: Upcoming, Completed, Succeeded, Failed.
+    -   Access to past interview recordings and details.
+
+### B. Scheduling an Interview
+1.  Navigate to the **Schedule** page (via "New Call" or "Schedule New Interview").
+2.  Fill in interview details:
+    -   **Title & Description**: Topic of the interview.
+    -   **Date & Time**: When the interview will take place.
+    -   **Candidate**: Select a candidate from the registered users list.
+    -   **Interviewers**: Select additional interviewers (if any).
+3.  **Confirm**: Clicking "Schedule Meeting" creates the interview record and generates a unique meeting link.
+
+### C. Conducting the Interview
+1.  **Join Meeting**:
+    -   When the scheduled time arrives, the "Join Meeting" button becomes active on the Home or Dashboard card.
+    -   Clicking it enters the video call room.
+2.  **In-Meeting Features**:
+    -   **Video/Audio**: Real-time communication via Stream.
+    -   **Code Editor**: A shared, real-time collaborative code editor (Monaco Editor).
+    -   **Question Selection**: Select coding problems from a predefined list to present to the candidate.
+    -   **Code Execution**: Run the candidate's code against test cases (supports multiple languages like JavaScript, Python, Java, C++).
+    -   **AI Review**: Generate an AI-powered review of the code quality, potential bugs, and optimizations.
+3.  **End Meeting**: The interviewer can end the call for everyone.
+
+### D. Post-Interview Actions
+1.  **Rate & Review**:
+    -   After the interview is marked "Completed", go to the **Dashboard**.
+    -   Click **"Rate Interview"** (or "Add Comment") on the interview card.
+    -   Provide a **Rating (1-5 stars)** and written feedback.
+    -   Mark the interview status as **"Pass"** or **"Fail"**.
+2.  **Recordings**: Access full video recordings of the session in the **Recordings** section.
+
+---
+
+## 3. Interviewee / Candidate Workflow
+
+### A. Home Page
+-   **Upcoming Interviews**: View a list of scheduled interviews.
+-   **Status**: See the status of interviews (Upcoming, Live, Completed).
+-   **Join**: When an interview is "Live", the **"Join Meeting"** button becomes available.
+
+### B. The Interview
+1.  **Join Meeting**: Enter the video call room at the scheduled time.
+2.  **Collaboration**:
+    -   **Video/Audio**: Communicate with the interviewer.
+    -   **Coding**: Write code in the shared editor. Changes are synced in real-time.
+    -   **Execution**: Run code to check output and debug.
+    -   **Questions**: View the problem statement selected by the interviewer.
+
+### C. Post-Interview
+-   **History**: View a list of past interviews.
+-   **Note**: Candidates typically do not see the specific ratings or internal comments left by the interviewer.
+
+---
+
+## 4. Technical Flow Summary
+
+1.  **Scheduling**: Creates a record in Convex DB (`interviews` table) and a Stream Call ID.
+2.  **Meeting**:
+    -   **Video**: Handled by Stream Video SDK.
+    -   **Code Sync**: Handled by Convex (`codeSessions` table) for real-time updates.
+    -   **Execution**: Code is sent to an execution engine (e.g., Judge0) via API.
+3.  **AI Review**: Code is sent to an AI endpoint (`/api/ai/review`) which returns analysis.
+4.  **Completion**: Status updates and comments are stored in Convex (`interviews` and `comments` tables)
 
 ## 🛠️ Tech Stack
 
