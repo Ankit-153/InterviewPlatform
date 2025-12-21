@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
-// Ensure this API route is always dynamic and not pre-rendered
+// Ensure route is always dynamic
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
@@ -15,68 +15,75 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.GOOGLE_API_KEY) {
+    // SDK automatically reads GEMINI_API_KEY from environment
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
-        { error: "Google API key not configured" },
+        { error: "GEMINI_API_KEY not configured" },
         { status: 500 }
       );
     }
-    // Instantiate the client lazily to avoid build-time errors
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-    const prompt = `You are an expert code reviewer. Analyze the following ${language} code and provide a detailed review in JSON format.
+    const ai = new GoogleGenAI({});
 
-Code to review:
+    const prompt = `
+You are an expert code reviewer.
+
+Analyze the following ${language} code and return ONLY valid JSON.
+
+Code:
 \`\`\`${language}
 ${code}
 \`\`\`
 
-Provide your analysis in the following JSON format:
+JSON format:
 {
   "quality": "Brief overall quality assessment",
-  "codeQualityScore": <number between 1-10>,
-  "bestPractices": ["practice1", "practice2", ...],
-  "potentialBugs": ["bug1", "bug2", ...],
-  "performanceIssues": ["issue1", "issue2", ...],
-  "suggestions": ["suggestion1", "suggestion2", ...],
-  "summary": "Comprehensive summary of the review"
+  "codeQualityScore": 1-10,
+  "bestPractices": [],
+  "potentialBugs": [],
+  "performanceIssues": [],
+  "suggestions": [],
+  "summary": "Comprehensive summary"
 }
 
-Be specific and constructive in your feedback. If there are no issues in a category, use an empty array.`;
+Rules:
+- Return valid JSON only
+- No markdown
+- No explanations outside JSON
+`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
 
-    const result = await model.generateContent(prompt);
+    const text = response.text;
 
-    const content = result.response.text();
-    if (!content) {
-      throw new Error("No response from Gemini");
+    if (!text) {
+      throw new Error("Empty response from Gemini");
     }
 
-    // Extract JSON from the response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("Could not parse AI response as JSON");
+    let review;
+    try {
+      review = JSON.parse(text);
+    } catch {
+      throw new Error("Gemini response is not valid JSON");
     }
-
-    const review = JSON.parse(jsonMatch[0]);
 
     return NextResponse.json({
       success: true,
       review,
     });
   } catch (error) {
-    console.error("Error calling Gemini:", error);
-
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message || "Failed to generate review" },
-        { status: 500 }
-      );
-    }
+    console.error("Gemini API Error:", error);
 
     return NextResponse.json(
-      { error: "Failed to generate code review" },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to generate code review",
+      },
       { status: 500 }
     );
   }
