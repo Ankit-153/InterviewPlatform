@@ -1,101 +1,165 @@
-IntervuDesk
-Technical Interview Platform
-IntervuDesk is a comprehensive platform designed to streamline technical interviews with real-time coding, video meetings, and automated assessment tools.
+$content = @"
+# Interview Platform
 
-IntervuDesk Logo
+A comprehensive technical interview platform built with Next.js, enabling real-time video calls, collaborative coding, and AI-powered code reviews.
 
-Features
-For Interviewers
-User Role Management: Easily switch users between candidate and interviewer roles
-Video Call Creation: Start instant meetings or schedule future interviews
-Recording Management: Access, share and delete interview recordings
-Real-time Code Observation: Watch candidates solve problems in real-time
-Custom Problem Library: Choose from various coding challenges or add your own
-For Candidates
-Integrated Coding Environment: Solve problems in JavaScript, Python, Java, or C++
-Multiple Question Types: Practice with a variety of algorithm and data structure problems
-Live Code Execution: Run and test code directly in the browser
-Interview Preparation: Access scheduled interviews and meeting links
-Collaborative Features
-Real-time Code Sharing: Synchronized code editing with multiple participants
-Video Conferencing: High-quality video meetings with screen sharing
-Interview Recording: Automatically save interviews for later review
-Shared Code Execution: Everyone can run and test the code during interviews
-Tech Stack
-Frontend: Next.js, React, TypeScript
-UI Components: Shadcn UI, Tailwind CSS
-Authentication: Clerk
-Database: Convex
-Video/Audio: Stream.io SDK
-Code Editor: Monaco Editor (VSCode's editor)
-Code Execution: Judge0 API
-Installation
+## 🚀 Features
+
+-   **Real-time Video & Audio Calls**: High-quality video conferencing powered by Stream.
+-   **Collaborative Code Editor**: Real-time code sharing and execution environment using Monaco Editor.
+-   **AI Code Review**: Instant code analysis and feedback powered by Google Gemini AI.
+-   **Role-Based Access**: Distinct interfaces and capabilities for Candidates and Interviewers.
+-   **Interview Scheduling**: Easy-to-use scheduling system for setting up interview sessions.
+-   **Session Recording**: Automatic recording of interview sessions for later review.
+-   **Feedback System**: Structured feedback and rating system for interviewers.
+-   **Secure Authentication**: Robust user authentication and management via Clerk.
+-   **Real-time Database**: Instant data synchronization using Convex.
+-   **Code Execution**: Run code in multiple languages using Judge0.
+
+## 🛠️ Tech Stack
+
+### Frontend
+-   **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+-   **UI Components**: [Shadcn/ui](https://ui.shadcn.com/) (Radix UI)
+-   **Icons**: [Lucide React](https://lucide.dev/)
+
+### Backend & Services
+-   **Database**: [Convex](https://www.convex.dev/) (Real-time database)
+-   **Authentication**: [Clerk](https://clerk.com/)
+-   **Video/Audio**: [Stream](https://getstream.io/)
+-   **AI**: [Google Gemini](https://deepmind.google/technologies/gemini/)
+-   **Code Editor**: [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+-   **Code Execution**: [Judge0](https://judge0.com/) (via RapidAPI)
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+-   Node.js (v18 or higher)
+-   npm or yarn
+
+You will also need accounts and API keys for:
+-   [Clerk](https://clerk.com/)
+-   [Convex](https://www.convex.dev/)
+-   [Stream](https://getstream.io/)
+-   [Google AI Studio](https://aistudio.google.com/) (Gemini API)
+-   [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce) (Judge0)
+
+## ⚡ Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/interview-platform.git
+cd interview-platform
 ```
-# Clone the repository
-git clone https://github.com/your-username/intervudesk.git
 
-# Navigate to project directory
-cd intervudesk
+### 2. Install Dependencies
 
-# Install dependencies
+```bash
 npm install
-
-# Set up environment variables
-cp .env.example .env.local
-
-# Start development server
-npm run dev
-
-
+# or
+yarn install
 ```
-Environment Setup
-Create a .env.local file with the following variables:
-```
+
+### 3. Environment Setup
+
+Create a \`.env.local\` file in the root directory and add the following environment variables:
+
+```env
 # Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Stream.io for Video
-NEXT_PUBLIC_STREAM_API_KEY=
-STREAM_SECRET=
-
-# Judge0 for Code Execution
-NEXT_PUBLIC_RAPIDAPI_KEY=
-NEXT_PUBLIC_RAPIDAPI_HOST=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
 
 # Convex Database
-NEXT_PUBLIC_CONVEX_URL=
+CONVEX_DEPLOYMENT=dev:...
+NEXT_PUBLIC_CONVEX_URL=https://...
+
+# Stream Video/Audio
+NEXT_PUBLIC_STREAM_API_KEY=...
+STREAM_SECRET_KEY=...
+
+# Google Gemini AI
+GEMINI_API_KEY=...
+
+# Judge0 (RapidAPI)
+NEXT_PUBLIC_RAPIDAPI_KEY=...
+NEXT_PUBLIC_RAPIDAPI_HOST=judge0-ce.p.rapidapi.com
 ```
 
-Usage
-Sign Up/Login: Create an account or log in using email or SSO
-Role Selection: Users start as candidates; admin can promote to interviewer status
-Creating Interviews: Interviewers can schedule and start interview sessions
-Joining Interviews: Candidates receive links to join scheduled interviews
-Coding Environment: Solve problems in preferred language with real-time execution
-Recordings: Access past interview recordings for review and feedback
-Project Structure
-```
-├── convex/                  # Convex database functions and schema
-├── public/                  # Static assets
-└── src/
-    ├── actions/             # Server actions
-    ├── app/                 # Next.js app router pages
-    │   ├── (admin)/         # Admin-only routes
-    │   ├── (root)/          # Main application routes
-    │   └── api/             # API routes
-    ├── components/          # React components
-    ├── constants/           # Application constants
-    ├── hooks/               # Custom React hooks
-    ├── lib/                 # Utility functions
-    └── models/              # Data models
+### 4. Setup Convex
 
+Initialize and configure the Convex database:
 
+```bash
+npx convex dev
 ```
 
-Acknowledgments
-Clerk for authentication
-Stream.io for video functionality
-Convex for database
-Shadcn UI for UI components
-Judge0 for code execution
+This command will start the Convex development server and sync your schema.
+
+### 5. Run the Application
+
+Start the Next.js development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## 📂 Project Structure
+
+```
+├── convex/                 # Backend API and Database Schema
+│   ├── schema.ts          # Database schema definition
+│   ├── users.ts           # User related queries/mutations
+│   ├── interviews.ts      # Interview management logic
+│   └── ...
+├── src/
+│   ├── app/               # Next.js App Router pages
+│   │   ├── (root)/        # Main application routes
+│   │   ├── (admin)/       # Admin dashboard routes
+│   │   └── api/           # API routes (AI review, etc.)
+│   ├── components/        # React components
+│   │   ├── ui/            # Reusable UI components (buttons, inputs)
+│   │   ├── providers/     # Context providers (Clerk, Stream, Theme)
+│   │   └── ...
+│   ├── hooks/             # Custom React hooks
+│   ├── lib/               # Utility functions
+│   └── constants/         # App constants
+├── public/                # Static assets
+└── ...
+```
+
+## 🔑 Key Components
+
+-   **\`MeetingRoom.tsx\`**: Handles the main video interface and layout.
+-   **\`CodeEditor.tsx\`**: Manages the Monaco editor instance and code execution.
+-   **\`AIReviewDisplay.tsx\`**: Displays the AI-generated code review feedback.
+-   **\`InterviewScheduleUI.tsx\`**: Interface for scheduling new interviews.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1.  Fork the project
+2.  Create your feature branch (\`git checkout -b feature/AmazingFeature\`)
+3.  Commit your changes (\`git commit -m 'Add some AmazingFeature'\`)
+4.  Push to the branch (\`git push origin feature/AmazingFeature\`)
+5.  Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+-   [Next.js](https://nextjs.org/) for the amazing framework.
+-   [Convex](https://www.convex.dev/) for simplifying backend development.
+-   [Clerk](https://clerk.com/) for seamless authentication.
+-   [Stream](https://getstream.io/) for robust video calling capabilities.
+"@
+Set-Content -Path "c:\InterviewPlatform\README.md" -Value $content
